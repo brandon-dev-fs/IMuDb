@@ -28,9 +28,7 @@ namespace IAlbumDB.Infrastructure.Mappers.Album
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Year = entity.Year,
-                ArtistName = entity.Artist.Name,
-                Songs = entity.Songs.Select(_songMapping.MapToDto).ToList(),
+                Year = entity.Year
             };
         }
 
@@ -40,8 +38,7 @@ namespace IAlbumDB.Infrastructure.Mappers.Album
             {
                 Id = Dto.Id,
                 Name = Dto.Name,
-                Year = Dto.Year,
-                Songs = Dto.Songs.Select(_songMapping.MapToEntity).ToList(),
+                Year = Dto.Year
             };
         }
     }
