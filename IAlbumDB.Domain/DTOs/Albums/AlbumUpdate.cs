@@ -1,6 +1,6 @@
 ﻿namespace IAlbumDB.Domain.DTOs.Albums
 {
-    public class AlbumUpdateDto : AlbumReturnDto
+    public class AlbumUpdate : AlbumReturn
     {
     }
 }

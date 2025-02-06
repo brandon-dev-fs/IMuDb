@@ -9,33 +9,33 @@ namespace IAlbumDB.Infrastructure.Services.Song
     public class SongServices : ISongService
     {
         protected readonly ISongRepository _songRepository;
-        private readonly IMapping<SongDetailsDto, SongEntity> _songDetailsMapping;
-        private readonly IMapping<SongReturnDto, SongEntity> _songReturnMapping;
+        private readonly IMapping<SongDetails, SongEntity> _songDetailsMapping;
+        private readonly IMapping<SongReturn, SongEntity> _songReturnMapping;
 
         public SongServices(ISongRepository songRepository,
-            IMapping<SongDetailsDto, SongEntity> songDetailsMapping,
-            IMapping<SongReturnDto, SongEntity> songReturnMapping)
+            IMapping<SongDetails, SongEntity> songDetailsMapping,
+            IMapping<SongReturn, SongEntity> songReturnMapping)
         {
             _songRepository = songRepository;
             _songDetailsMapping = songDetailsMapping;
             _songReturnMapping = songReturnMapping;
         }
 
-        public async Task<IList<SongReturnDto>?> GetAllSongsAsync()
+        public async Task<IList<SongReturn>?> GetAllSongsAsync()
         {
             var songs = await _songRepository.GetAllAsync();
-            var formattedSongs = songs.Select(_songReturnMapping.MapToDto).ToList();
+            var formattedSongs = songs.Select(_songReturnMapping.Map).ToList();
             return formattedSongs;
         }
 
-        public async Task<IList<SongReturnDto>?> GetAllSongsByAlbumAsync(Guid albumId)
+        public async Task<IList<SongReturn>?> GetAllSongsByAlbumAsync(Guid albumId)
         {
             var songs = await _songRepository.GetSongsByAlbumAsync(albumId);
-            var formattedSongs = songs?.Select(_songReturnMapping.MapToDto).ToList();
+            var formattedSongs = songs?.Select(_songReturnMapping.Map).ToList();
             return formattedSongs;
         }
 
-        public async Task<SongDetailsDto> GetSongByIdAsync(Guid id)
+        public async Task<SongDetails> GetSongByIdAsync(Guid id)
         {
             var song = await _songRepository.GetByIdAsync(id);
 
@@ -44,7 +44,7 @@ namespace IAlbumDB.Infrastructure.Services.Song
                 throw new Exception("Song could not be found with id");
             }
 
-            return _songDetailsMapping.MapToDto(song);
+            return _songDetailsMapping.Map(song);
         }
 
         // Create removed as songs are created at album creation
@@ -65,7 +65,7 @@ namespace IAlbumDB.Infrastructure.Services.Song
         /// Song update only allows for lyric updates
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateSongAsync(SongUpdateDto data)
+        public async Task UpdateSongAsync(SongUpdate data)
         {
             var updateSong = await _songRepository.GetByIdAsync(data.ID);
 

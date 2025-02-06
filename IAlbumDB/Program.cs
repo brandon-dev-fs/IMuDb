@@ -13,6 +13,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMappings();
 builder.Services.AddServices();
 builder.Services.AddDataContext(builder.Configuration);
+// Custom Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "allowedOrigin", policy =>
+    {
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000");
+    });
+});
 
 var app = builder.Build();
 
@@ -22,6 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("allowedOrigin");
 
 app.UseHttpsRedirection();
 

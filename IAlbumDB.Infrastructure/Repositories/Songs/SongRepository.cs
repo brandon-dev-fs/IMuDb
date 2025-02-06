@@ -15,7 +15,7 @@ namespace IAlbumDB.Infrastructure.Repositories.Songs
 
         public async Task<IList<SongEntity>?> GetSongsByAlbumAsync(Guid albumId)
         {
-            return await _context.Songs.Where(s => s.AlbumId == albumId).AsNoTracking().ToListAsync();
+            return await _context.Songs.Where(s => s.Album.Id == albumId).AsNoTracking().ToListAsync();
         }
     }
 }

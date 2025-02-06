@@ -20,7 +20,7 @@ namespace IAlbumDB.Infrastructure.Repositories.Artists
 
             foreach (AlbumEntity album in returnArtist.Albums)
             {
-                album.Songs = _context.Songs.Where(s => s.AlbumId == album.Id).OrderBy(s => s.Track).ToList();
+                album.Songs = _context.Songs.Where(s => s.Album.Id == album.Id).OrderBy(s => s.Track).ToList();
             }
 
             return returnArtist;

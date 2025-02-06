@@ -16,7 +16,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<SongReturnDto>?>> GetSongsAsync([FromQuery] Guid? albumId)
+        public async Task<ActionResult<IList<SongReturn>?>> GetSongsAsync([FromQuery] Guid? albumId)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet("{songId}")]
-        public async Task<ActionResult<SongDetailsDto>> GetSongDetails(Guid songId)
+        public async Task<ActionResult<SongDetails>> GetSongDetails(Guid songId)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace IAlbumDB.Controllers
         //}
 
         [HttpPut]
-        public async Task<ActionResult> UpdateSong([FromBody] SongUpdateDto updateSong)
+        public async Task<ActionResult> UpdateSong([FromBody] SongUpdate updateSong)
         {
             try
             {

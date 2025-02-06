@@ -1,8 +1,13 @@
 ﻿namespace IAlbumDB.Domain.Interfaces.Mapper
 {
-    public interface IMapping<TDto, TEntity>
+    //public interface IMapping<TDto, TEntity>
+    //{
+    //    TDto Map(TEntity entity);
+    //    TEntity MapToEntity(TDto Dto);
+    //}
+
+    public interface IMapping<out TOut, in TIn>
     {
-        TDto MapToDto(TEntity entity);
-        TEntity MapToEntity(TDto Dto);
+        TOut Map(TIn input);
     }
 }

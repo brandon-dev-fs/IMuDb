@@ -4,11 +4,11 @@ namespace IAlbumDB.Domain.Interfaces.Services.Song
 {
     public interface ISongService
     {
-        Task<IList<SongReturnDto>?> GetAllSongsAsync();
-        Task<IList<SongReturnDto>?> GetAllSongsByAlbumAsync(Guid albumId);
-        Task<SongDetailsDto> GetSongByIdAsync(Guid id);
+        Task<IList<SongReturn>?> GetAllSongsAsync();
+        Task<IList<SongReturn>?> GetAllSongsByAlbumAsync(Guid albumId);
+        Task<SongDetails> GetSongByIdAsync(Guid id);
         //Task<Guid> CreateSongAsync(SongDetailsDto data);
-        Task UpdateSongAsync(SongUpdateDto data);
+        Task UpdateSongAsync(SongUpdate data);
         //Task DeleteSongAsync(Guid id);
     }
 }

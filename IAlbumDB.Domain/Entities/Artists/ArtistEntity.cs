@@ -5,8 +5,8 @@ namespace IAlbumDB.Domain.Entities.Artists
 {
     public class ArtistEntity : BaseEntity
     {
-        public List<string>? Members { get; set; }
-        public List<AlbumEntity> Albums { get; set; } = new();
-        public List<SongEntity> Songs { get; set; } = new();
+        public IList<string>? Members { get; set; }
+        public IList<AlbumEntity>? Albums { get; set; }
+        public IList<SongEntity>? Songs { get; set; }
     }
 }

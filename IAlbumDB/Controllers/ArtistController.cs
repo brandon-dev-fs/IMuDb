@@ -16,7 +16,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ArtistReturnDto>>> GetArtists()
+        public async Task<ActionResult<IList<ArtistReturn>>> GetArtists()
         {
             try
             {
@@ -31,7 +31,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet("{artistId}")]
-        public async Task<ActionResult<ArtistDetailsDto>> GetArtist(Guid artistId)
+        public async Task<ActionResult<ArtistDetails>> GetArtist(Guid artistId)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateArtist([FromBody] ArtistCreateDto newArtist)
+        public async Task<ActionResult<Guid>> CreateArtist([FromBody] ArtistCU newArtist)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateArtist([FromBody] ArtistUpdateDto updateArtist)
+        public async Task<ActionResult> UpdateArtist([FromBody] ArtistCU updateArtist)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace IAlbumDB.Controllers
         {
             try
             {
-                await _artistServices.DeleteArtistAsync(artistId);
+                await _artistServices.SoftDeleteArtistAsync(artistId);
                 return NoContent();
             }
             catch (Exception ex)

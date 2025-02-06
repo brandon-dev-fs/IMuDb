@@ -4,11 +4,13 @@ namespace IAlbumDB.Domain.Interfaces.Services.Album
 {
     public interface IAlbumService
     {
-        Task<IList<AlbumReturnDto>?> GetAllAlbumsAsync();
-        Task<IList<AlbumReturnDto>?> GetAllAlbumsByArtistAsync(Guid artistId);
-        Task<AlbumDetailsDto> GetAlbumByIdAsync(Guid id);
-        Task<Guid> CreateAlbumAsync(AlbumCreateDto album);
-        Task UpdateAlbumAsync(AlbumUpdateDto album);
+        Task<IList<AlbumReturn>?> GetAllAlbumsAsync();
+        Task<IList<AlbumReturn>?> GetAllAlbumsByArtistAsync(Guid artistId);
+        Task<AlbumDetails> GetAlbumByIdAsync(Guid id);
+        // Start Here
+        Task<Guid> CreateAlbumAsync(AlbumCreate album);
+        Task UpdateAlbumAsync(AlbumUpdate album);
+
         Task DeleteAlbumAsync(Guid id);
     }
 }

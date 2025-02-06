@@ -5,9 +5,7 @@ using IAlbumDB.Domain.Entities.Albums;
 using IAlbumDB.Domain.Entities.Artists;
 using IAlbumDB.Domain.Entities.Songs;
 using IAlbumDB.Domain.Interfaces.Mapper;
-using IAlbumDB.Infrastructure.Mappers.Album;
-using IAlbumDB.Infrastructure.Mappers.Artist;
-using IAlbumDB.Infrastructure.Mappers.Song;
+using IAlbumDB.Infrastructure.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IAlbumDB.Infrastructure.ServiceRegistrations.Mappings
@@ -17,15 +15,15 @@ namespace IAlbumDB.Infrastructure.ServiceRegistrations.Mappings
         public static IServiceCollection AddMappings(this IServiceCollection services)
         {
             services
-                .AddScoped<IMapping<AlbumCreateDto, AlbumEntity>, AlbumCreateMappings>()
-                .AddScoped<IMapping<AlbumDetailsDto, AlbumEntity>, AlbumDetailsMappings>()
-                .AddScoped<IMapping<AlbumReturnDto, AlbumEntity>, AlbumReturnMappings>()
-                .AddScoped<IMapping<ArtistCreateDto, ArtistEntity>, ArtistCreateMappings>()
-                .AddScoped<IMapping<ArtistDetailsDto, ArtistEntity>, ArtistDetailsMappings>()
-                .AddScoped<IMapping<ArtistReturnDto, ArtistEntity>, ArtistReturnMappings>()
-                .AddScoped<IMapping<SongCreateDto, SongEntity>, SongCreateMappings>()
-                .AddScoped<IMapping<SongDetailsDto, SongEntity>, SongDetailsMappings>()
-                .AddScoped<IMapping<SongReturnDto, SongEntity>, SongReturnMappings>();
+                .AddScoped<IMapping<AlbumCreate, AlbumEntity>, AutoMapping<AlbumCreate, AlbumEntity>>()
+                .AddScoped<IMapping<AlbumDetails, AlbumEntity>, AutoMapping<AlbumDetails, AlbumEntity>>()
+                .AddScoped<IMapping<AlbumReturn, AlbumEntity>, AutoMapping<AlbumReturn, AlbumEntity>>()
+                .AddScoped<IMapping<ArtistCU, ArtistEntity>, AutoMapping<ArtistCU, ArtistEntity>>()
+                .AddScoped<IMapping<ArtistDetails, ArtistEntity>, AutoMapping<ArtistDetails, ArtistEntity>>()
+                .AddScoped<IMapping<ArtistReturn, ArtistEntity>, AutoMapping<ArtistReturn, ArtistEntity>>()
+                .AddScoped<IMapping<SongCreate, SongEntity>, AutoMapping<SongCreate, SongEntity>>()
+                .AddScoped<IMapping<SongDetails, SongEntity>, AutoMapping<SongDetails, SongEntity>>()
+                .AddScoped<IMapping<SongReturn, SongEntity>, AutoMapping<SongReturn, SongEntity>>();
             return services;
         }
     }
