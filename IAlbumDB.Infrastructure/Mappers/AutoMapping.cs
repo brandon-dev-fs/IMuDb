@@ -3,6 +3,8 @@
 namespace IAlbumDB.Infrastructure.Mappers
 {
     public class AutoMapping<TOut, TIn> : IMapping<TOut, TIn>
+    where TOut : class
+    where TIn : class
     {
         public TOut Map(TIn input)
         {

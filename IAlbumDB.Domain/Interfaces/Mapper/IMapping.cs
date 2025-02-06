@@ -7,6 +7,8 @@
     //}
 
     public interface IMapping<out TOut, in TIn>
+    where TOut : class
+    where TIn : class
     {
         TOut Map(TIn input);
     }
