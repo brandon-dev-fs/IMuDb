@@ -1,4 +1,5 @@
-﻿using IAlbumDB.Domain.DTOs.Artist;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
+using IAlbumDB.Domain.DTOs.Return.Artists;
 using IAlbumDB.Domain.Entities.Artists;
 using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Artist;
@@ -10,12 +11,12 @@ namespace IAlbumDB.Infrastructure.Services.Artist
     {
         protected readonly IArtistRepository _artistRepository;
         private readonly IMapping<ArtistDetails, ArtistEntity> _artistDetailedMapping;
-        private readonly IMapping<ArtistReturn, ArtistEntity> _artistReturnMapping;
+        private readonly IMapping<ArtistBase, ArtistEntity> _artistReturnMapping;
 
         public ArtistServices(IArtistRepository artistRepository,
             IMapping<ArtistDetails, ArtistEntity> artistDetailedMapping,
-            IMapping<ArtistReturn, ArtistEntity> artistReturnMapping,
-            IMapping<ArtistReturn, ArtistEntity> artistCreateMapping)
+            IMapping<ArtistBase, ArtistEntity> artistReturnMapping,
+            IMapping<ArtistBase, ArtistEntity> artistCreateMapping)
         {
             _artistRepository = artistRepository;
             _artistDetailedMapping = artistDetailedMapping;
@@ -26,7 +27,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         /// Gets All Artist with DTO artistReturnDto for a lightweight 
         /// </summary>
         /// <returns>IList<ArtistReturnDto>?</returns>
-        public async Task<IList<ArtistReturn>?> GetAllArtistAsync()
+        public async Task<IList<ArtistBase>?> GetAllArtistAsync()
         {
             var artists = await _artistRepository.GetAllArtistAsync();
             var formattedArtists = artists?.Select(_artistReturnMapping.Map).ToList();
@@ -37,9 +38,9 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         /// Gets All An Artist details intersected with their albums by Id
         /// </summary>
         /// <returns type="IEnumerable<ArtistR>">IList<ArtistReturnDto>?</returns>
-        public async Task<ArtistDetails?> GetArtistByIdAsync(Guid id)
+        public async Task<ArtistDetails?> GetArtistByIdAsync(Guid Id)
         {
-            var artist = await _artistRepository.GetArtistByIdAsync(id) ?? throw new Exception($"Artist with Id:{id} could not be found.");
+            var artist = await _artistRepository.GetArtistByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
             return _artistDetailedMapping.Map(artist);
         }
@@ -78,14 +79,14 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         /// Update allows you to change the member values and other values to be added to the db
         /// ### Done
         /// </summary>
-        public async Task UpdateArtistAsync(ArtistCU artist)
+        public async Task UpdateArtistAsync(Guid Id, ArtistCU artist)
         {
-            if (artist.Id == Guid.Empty || artist.Id is null)
+            if (Id == Guid.Empty)
             {
                 throw new Exception($"Artist must have Id to update");
             }
 
-            var updateArtist = await _artistRepository.GetByIdAsync((Guid)artist.Id) ?? throw new Exception($"Artist with Id:{artist.Id} could not be found.");
+            var updateArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
             updateArtist.Name = artist.Name;
             updateArtist.Members = artist.Members?.ToList();
@@ -98,9 +99,9 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         /// Soft deletes an artist
         /// ### Done
         /// </summary>
-        public async Task SoftDeleteArtistAsync(Guid id)
+        public async Task SoftDeleteArtistAsync(Guid Id)
         {
-            var deleteArtist = await _artistRepository.GetByIdAsync(id) ?? throw new Exception($"Artist with Id:{id} could not be found.");
+            var deleteArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
             deleteArtist.IsActive = false;
             deleteArtist.UpdatedAt = DateTime.UtcNow;

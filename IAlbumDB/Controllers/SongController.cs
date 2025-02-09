@@ -1,4 +1,5 @@
-﻿using IAlbumDB.Domain.DTOs.Songs;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Songs;
+using IAlbumDB.Domain.DTOs.Return.Songs;
 using IAlbumDB.Domain.Interfaces.Services.Song;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,28 +16,11 @@ namespace IAlbumDB.Controllers
             _songServices = songServices;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IList<SongReturn>?>> GetSongsAsync([FromQuery] Guid? albumId)
-        {
-            try
-            {
-                if (albumId != null)
-                {
-                    var songs = await _songServices.GetAllSongsByAlbumAsync((Guid)albumId);
-                    return Ok(songs);
-                }
-                else
-                {
-                    var songs = await _songServices.GetAllSongsAsync();
-                    return Ok(songs);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
+        /// <summary>
+        /// Gets the details for a specific song based on song Id
+        /// </summary>
+        /// <param name="songId"></param>
+        /// <returns></returns>
         [HttpGet("{songId}")]
         public async Task<ActionResult<SongDetails>> GetSongDetails(Guid songId)
         {
@@ -52,27 +36,18 @@ namespace IAlbumDB.Controllers
 
         }
 
-        // Song creation temporarily only handled through album creation
-        //[HttpPost]
-        //public async Task<ActionResult<SongDetailsDto>> CreateSong([FromBody] SongDto newSong)
-        //{
-        //    try
-        //    {
-        //        var songId = await _songServices.CreateSongAsync(newSong);
-        //        return Ok(songId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateSong([FromBody] SongUpdate updateSong)
+        /// <summary>
+        /// Allows update to song entity for lyrics, genere, other non key fields
+        /// </summary>
+        /// <param name="updateSong"></param>
+        /// <returns></returns>
+        [HttpPut("{songId}")]
+        public async Task<ActionResult> UpdateSong(Guid songId, [FromBody] SongCU updateSong)
         {
             try
             {
-                await _songServices.UpdateSongAsync(updateSong);
+                await _songServices.UpdateSongAsync(songId, updateSong);
                 return NoContent();
             }
             catch (Exception ex)
@@ -80,20 +55,5 @@ namespace IAlbumDB.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        // Songs can not be deleted by endpoint only by deletion of an album
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<SongDetailsDto>> DeleteSong(Guid id)
-        //{
-        //    try
-        //    {
-        //        await _songServices.DeleteSongAsync(id);
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
     }
 }

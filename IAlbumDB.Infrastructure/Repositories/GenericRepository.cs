@@ -19,10 +19,10 @@ namespace IAlbumDB.Infrastructure.Repositories
             return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        // No thrown exception for null lookups that is left to the client to decide if exception or not
-        public async Task<TEntity?> GetByIdAsync(Guid id)
+        // No thrown exception for null lookups that is left to the client to decIde if exception or not
+        public async Task<TEntity?> GetByIdAsync(Guid Id)
         {
-            return await _context.FindAsync<TEntity>(id);
+            return await _context.FindAsync<TEntity>(Id);
         }
 
         public async Task<Guid> AddEntityAsync(TEntity entity)

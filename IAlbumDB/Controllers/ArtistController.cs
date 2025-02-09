@@ -1,4 +1,5 @@
-﻿using IAlbumDB.Domain.DTOs.Artist;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
+using IAlbumDB.Domain.DTOs.Return.Artists;
 using IAlbumDB.Domain.Interfaces.Services.Artist;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ArtistReturn>>> GetArtists()
+        public async Task<ActionResult<IList<ArtistBase>>> GetArtists()
         {
             try
             {
@@ -58,12 +59,12 @@ namespace IAlbumDB.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateArtist([FromBody] ArtistCU updateArtist)
+        [HttpPut("{artistId}")]
+        public async Task<ActionResult> UpdateArtist(Guid artistId, [FromBody] ArtistCU updateArtist)
         {
             try
             {
-                await _artistServices.UpdateArtistAsync(updateArtist);
+                await _artistServices.UpdateArtistAsync(artistId, updateArtist);
                 return NoContent();
             }
             catch (Exception ex)

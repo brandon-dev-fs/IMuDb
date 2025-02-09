@@ -1,8 +1,7 @@
-﻿namespace IAlbumDB.Domain.DTOs.Artist
+﻿namespace IAlbumDB.Domain.DTOs.CreateUpdate.Artists
 {
-    public class ArtistReturn
+    public class ArtistCU
     {
-        public Guid Id { get; init; }
         public string Name { get; init; }
         public IList<string>? Members { get; init; }
     }

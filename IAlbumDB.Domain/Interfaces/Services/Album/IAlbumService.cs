@@ -1,16 +1,17 @@
-﻿using IAlbumDB.Domain.DTOs.Albums;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Albums;
+using IAlbumDB.Domain.DTOs.Return.Albums;
 
 namespace IAlbumDB.Domain.Interfaces.Services.Album
 {
     public interface IAlbumService
     {
-        Task<IList<AlbumReturn>?> GetAllAlbumsAsync();
-        Task<IList<AlbumReturn>?> GetAllAlbumsByArtistAsync(Guid artistId);
-        Task<AlbumDetails> GetAlbumByIdAsync(Guid id);
+        Task<IList<AlbumBase>?> GetAllAlbumsAsync();
+        Task<IList<AlbumBase>?> GetAllAlbumsByArtistAsync(Guid artistId);
+        Task<AlbumDetails> GetAlbumByIdAsync(Guid Id);
         // Start Here
-        Task<Guid> CreateAlbumAsync(AlbumCreate album);
-        Task UpdateAlbumAsync(AlbumUpdate album);
+        Task<Guid> CreateAlbumAsync(AlbumCU album);
+        Task UpdateAlbumAsync(Guid Id, AlbumCU data);
 
-        Task DeleteAlbumAsync(Guid id);
+        Task DeleteAlbumAsync(Guid Id);
     }
 }

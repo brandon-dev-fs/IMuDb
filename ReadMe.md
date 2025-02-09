@@ -1,6 +1,6 @@
 # Internet Music Database API
 
-This project is meant as a personal project for demonstration and development with skills in RESTful API's, Clean Architecture, and SOLID OOP implementation.
+This project is meant as a personal project for demonstration and development with skills in RESTful API's, Clean Architecture, and SOLId OOP implementation.
 
 ## Description
 
@@ -67,6 +67,6 @@ basic URI supported `https://localhost:{port}/api/{controller}`
 
 #### Song Models
 
-| SongUpdate                                           | SongDetails                                                                                                                                                                                      | SongReturn                                                                      |
+| SongCU                                           | SongDetails                                                                                                                                                                                      | SongReturn                                                                      |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
 | <pre>{<br>"Id": Guid,<br>"Lyrics": string,<br>}<pre> | <pre>{<br>"Id": Guid,<br>"Name": string,<br>"Length": int,<br>"Track": int,<br>"Genre": string,<br>"Lyrics": string,<br>"Album": {<br>},<br>"Artist: {<br>},<br>"UpdatedAt": DateTime<br>}</pre> | <pre>{<br>"Id": Guid,<br>"Name": string,<br>"Length": int,<br>"Track": int<br>} |

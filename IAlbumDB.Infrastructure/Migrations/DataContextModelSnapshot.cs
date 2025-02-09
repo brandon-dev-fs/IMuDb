@@ -26,10 +26,10 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<Guid>("ArtistId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -58,7 +58,7 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -85,13 +85,13 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<Guid?>("AlbumId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<Guid?>("ArtistId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueIdentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

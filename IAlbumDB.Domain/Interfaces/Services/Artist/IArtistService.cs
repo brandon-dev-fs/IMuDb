@@ -1,13 +1,14 @@
-﻿using IAlbumDB.Domain.DTOs.Artist;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
+using IAlbumDB.Domain.DTOs.Return.Artists;
 
 namespace IAlbumDB.Domain.Interfaces.Services.Artist
 {
     public interface IArtistService
     {
-        Task<IList<ArtistReturn>?> GetAllArtistAsync();
-        Task<ArtistDetails?> GetArtistByIdAsync(Guid id);
+        Task<IList<ArtistBase>?> GetAllArtistAsync();
+        Task<ArtistDetails?> GetArtistByIdAsync(Guid Id);
         Task<Guid> CreateArtistAsync(ArtistCU artist);
-        Task UpdateArtistAsync(ArtistCU data);
-        Task SoftDeleteArtistAsync(Guid id);
+        Task UpdateArtistAsync(Guid Id, ArtistCU data);
+        Task SoftDeleteArtistAsync(Guid Id);
     }
 }

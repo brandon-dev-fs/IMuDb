@@ -8,8 +8,8 @@ namespace IAlbumDB.Domain.Entities.Songs
         public int Length { get; set; }
         public int Track { get; set; }
         public string? Genre { get; set; }
+        public string? Lyrics { get; set; }
         public AlbumEntity? Album { get; set; }
         public ArtistEntity? Artist { get; set; }
-        public string? Lyrics { get; set; }
     }
 }

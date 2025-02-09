@@ -1,4 +1,5 @@
-﻿using IAlbumDB.Domain.DTOs.Albums;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Albums;
+using IAlbumDB.Domain.DTOs.Return.Albums;
 using IAlbumDB.Domain.Interfaces.Services.Album;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<AlbumReturn>>> GetAllAlbums([FromQuery] Guid? artistId)
+        public async Task<ActionResult<IList<AlbumBase>>> GetAllAlbums([FromQuery] Guid? artistId)
         {
             try
             {
@@ -50,7 +51,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateAlbum([FromBody] AlbumCreate newAlbum)
+        public async Task<ActionResult<Guid>> CreateAlbum([FromBody] AlbumCU newAlbum)
         {
             try
             {
@@ -63,12 +64,12 @@ namespace IAlbumDB.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateAlbum([FromBody] AlbumUpdate updateAlbum)
+        [HttpPut("{albumId}")]
+        public async Task<ActionResult> UpdateAlbum(Guid albumId, [FromBody] AlbumCU updateAlbum)
         {
             try
             {
-                await _albumServices.UpdateAlbumAsync(updateAlbum);
+                await _albumServices.UpdateAlbumAsync(albumId, updateAlbum);
                 return NoContent();
             }
             catch (Exception ex)

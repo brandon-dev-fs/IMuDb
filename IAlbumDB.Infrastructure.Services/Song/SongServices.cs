@@ -1,8 +1,10 @@
-﻿using IAlbumDB.Domain.DTOs.Songs;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Songs;
+using IAlbumDB.Domain.DTOs.Return.Songs;
 using IAlbumDB.Domain.Entities.Songs;
 using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Songs;
 using IAlbumDB.Domain.Interfaces.Services.Song;
+using IAlbumDB.Infrastructure.Extensions;
 
 namespace IAlbumDB.Infrastructure.Services.Song
 {
@@ -10,68 +12,56 @@ namespace IAlbumDB.Infrastructure.Services.Song
     {
         protected readonly ISongRepository _songRepository;
         private readonly IMapping<SongDetails, SongEntity> _songDetailsMapping;
-        private readonly IMapping<SongReturn, SongEntity> _songReturnMapping;
+        private readonly IMapping<SongBase, SongEntity> _songReturnMapping;
 
         public SongServices(ISongRepository songRepository,
             IMapping<SongDetails, SongEntity> songDetailsMapping,
-            IMapping<SongReturn, SongEntity> songReturnMapping)
+            IMapping<SongBase, SongEntity> songReturnMapping)
         {
             _songRepository = songRepository;
             _songDetailsMapping = songDetailsMapping;
             _songReturnMapping = songReturnMapping;
         }
 
-        public async Task<IList<SongReturn>?> GetAllSongsAsync()
+        public async Task<IList<SongBase>?> GetAllSongsAsync()
         {
             var songs = await _songRepository.GetAllAsync();
             var formattedSongs = songs.Select(_songReturnMapping.Map).ToList();
             return formattedSongs;
         }
 
-        public async Task<IList<SongReturn>?> GetAllSongsByAlbumAsync(Guid albumId)
+        public async Task<IList<SongBase>?> GetAllSongsByAlbumAsync(Guid albumId)
         {
             var songs = await _songRepository.GetSongsByAlbumAsync(albumId);
             var formattedSongs = songs?.Select(_songReturnMapping.Map).ToList();
             return formattedSongs;
         }
 
-        public async Task<SongDetails> GetSongByIdAsync(Guid id)
+        public async Task<SongDetails> GetSongByIdAsync(Guid Id)
         {
-            var song = await _songRepository.GetByIdAsync(id);
+            var song = await _songRepository.GetSongDetailsByIdAsync(Id);
 
             if (song == null)
             {
-                throw new Exception("Song could not be found with id");
+                throw new Exception($"Song could not be found with {Id}");
             }
 
-            return _songDetailsMapping.Map(song);
+            //return _songDetailsMapping.Map(song);
+
+            return song.ToDto();
         }
-
-        // Create removed as songs are created at album creation
-        //public async Task<Guid> CreateSongAsync(SongCreateDto data)
-        //{
-        //    SongEntity newSong = _songMapping.MapToEntity(data);
-        //    newSong.Id = Guid.NewGuid();
-        //    newSong.IsActive = true;
-        //    newSong.CreatedAt = DateTime.UtcNow;
-        //    newSong.UpdatedAt = DateTime.UtcNow;
-
-        //    await _songRepository.AddEntityAsync(newSong);
-
-        //    return newSong.Id;
-        //}
 
         /// <summary>
         /// Song update only allows for lyric updates
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateSongAsync(SongUpdate data)
+        public async Task UpdateSongAsync(Guid Id, SongCU data)
         {
-            var updateSong = await _songRepository.GetByIdAsync(data.ID);
+            var updateSong = await _songRepository.GetByIdAsync(Id);
 
             if (updateSong == null)
             {
-                throw new Exception("Song could not be found with id");
+                throw new Exception("Song could not be found with Id");
             }
 
             updateSong.Lyrics = data.Lyrics;
@@ -79,21 +69,5 @@ namespace IAlbumDB.Infrastructure.Services.Song
 
             await _songRepository.UpdateEntityAsync(updateSong);
         }
-
-        // Delete removed as songs are deleted at album deletion
-        //public async Task DeleteSongAsync(Guid id)
-        //{
-        //    var deleteSong = await _songRepository.GetByIdAsync(id);
-
-        //    if (deleteSong == null)
-        //    {
-        //        throw new Exception("Song could not be found with id");
-        //    }
-
-        //    deleteSong.IsActive = false;
-        //    deleteSong.UpdatedAt = DateTime.UtcNow;
-
-        //    await _songRepository.UpdateEntityAsync(deleteSong);
-        //}
     }
 }
