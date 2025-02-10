@@ -1,7 +1,5 @@
 ﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Songs;
 using IAlbumDB.Domain.DTOs.Return.Songs;
-using IAlbumDB.Domain.Entities.Songs;
-using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Songs;
 using IAlbumDB.Domain.Interfaces.Services.Song;
 using IAlbumDB.Infrastructure.Extensions;
@@ -11,29 +9,23 @@ namespace IAlbumDB.Infrastructure.Services.Song
     public class SongServices : ISongService
     {
         protected readonly ISongRepository _songRepository;
-        private readonly IMapping<SongDetails, SongEntity> _songDetailsMapping;
-        private readonly IMapping<SongBase, SongEntity> _songReturnMapping;
 
-        public SongServices(ISongRepository songRepository,
-            IMapping<SongDetails, SongEntity> songDetailsMapping,
-            IMapping<SongBase, SongEntity> songReturnMapping)
+        public SongServices(ISongRepository songRepository)
         {
             _songRepository = songRepository;
-            _songDetailsMapping = songDetailsMapping;
-            _songReturnMapping = songReturnMapping;
         }
 
         public async Task<IList<SongBase>?> GetAllSongsAsync()
         {
             var songs = await _songRepository.GetAllAsync();
-            var formattedSongs = songs.Select(_songReturnMapping.Map).ToList();
+            var formattedSongs = songs.Select(_ => _.ToBaseDto()).ToList();
             return formattedSongs;
         }
 
         public async Task<IList<SongBase>?> GetAllSongsByAlbumAsync(Guid albumId)
         {
             var songs = await _songRepository.GetSongsByAlbumAsync(albumId);
-            var formattedSongs = songs?.Select(_songReturnMapping.Map).ToList();
+            var formattedSongs = songs?.Select(_ => _.ToBaseDto()).ToList();
             return formattedSongs;
         }
 
@@ -46,9 +38,7 @@ namespace IAlbumDB.Infrastructure.Services.Song
                 throw new Exception($"Song could not be found with {Id}");
             }
 
-            //return _songDetailsMapping.Map(song);
-
-            return song.ToDto();
+            return song.ToDetailedDto();
         }
 
         /// <summary>

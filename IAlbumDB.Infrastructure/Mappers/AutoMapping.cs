@@ -1,5 +1,6 @@
 ﻿using IAlbumDB.Domain.Interfaces.Mapper;
 
+/// This mapping class is not used in the context of this project but for now kept in the code base for possible future use or better placement
 namespace IAlbumDB.Infrastructure.Mappers
 {
     public class AutoMapping<TOut, TIn> : IMapping<TOut, TIn>

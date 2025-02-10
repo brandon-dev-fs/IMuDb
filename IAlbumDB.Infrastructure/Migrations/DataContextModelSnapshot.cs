@@ -26,10 +26,10 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ArtistId")
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -58,7 +58,7 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -66,7 +66,7 @@ namespace IAlbumDB.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Members")
+                    b.Property<string>("Musicians")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -85,13 +85,13 @@ namespace IAlbumDB.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AlbumId")
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ArtistId")
-                        .HasColumnType("uniqueIdentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

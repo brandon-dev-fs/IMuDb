@@ -1,0 +1,22 @@
+.container {
+    height: 100%;
+    width: 65%;
+    background-color: var(--color-white);
+}
+
+.page-banner {
+    background-color: var(--color-secondary);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-banner > h2 {
+    color: white;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}

@@ -4,10 +4,10 @@ using IAlbumDB.Domain.DTOs.Return.Albums;
 using IAlbumDB.Domain.Entities.Albums;
 using IAlbumDB.Domain.Entities.Songs;
 using IAlbumDB.Domain.Exceptions;
-using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Albums;
 using IAlbumDB.Domain.Interfaces.Repositories.Artist;
 using IAlbumDB.Domain.Interfaces.Services.Album;
+using IAlbumDB.Infrastructure.Extensions;
 
 namespace IAlbumDB.Infrastructure.Services.Album
 {
@@ -15,19 +15,13 @@ namespace IAlbumDB.Infrastructure.Services.Album
     {
         protected readonly IAlbumRepository _albumRepository;
         protected readonly IArtistRepository _artistRepository;
-        private readonly IMapping<AlbumDetails, AlbumEntity> _albumDetailsMapping;
-        private readonly IMapping<AlbumBase, AlbumEntity> _albumReturnMapping;
 
         public AlbumServices(
             IAlbumRepository albumRepository,
-            IArtistRepository artistRepository,
-            IMapping<AlbumDetails, AlbumEntity> albumDetailsMapping,
-            IMapping<AlbumBase, AlbumEntity> albumReturnMapping)
+            IArtistRepository artistRepository)
         {
             _albumRepository = albumRepository;
             _artistRepository = artistRepository;
-            _albumDetailsMapping = albumDetailsMapping;
-            _albumReturnMapping = albumReturnMapping;
         }
 
         /// <summary>
@@ -37,7 +31,7 @@ namespace IAlbumDB.Infrastructure.Services.Album
         public async Task<IList<AlbumBase>?> GetAllAlbumsAsync()
         {
             var albums = await _albumRepository.GetAllAlbumsAsync() ?? [];
-            var formattedAlbums = albums?.Select(_albumReturnMapping.Map).ToList();
+            var formattedAlbums = albums?.Select(_ => _.ToBaseDto()).ToList();
             return formattedAlbums;
         }
 
@@ -48,7 +42,7 @@ namespace IAlbumDB.Infrastructure.Services.Album
         public async Task<IList<AlbumBase>?> GetAllAlbumsByArtistAsync(Guid artistId)
         {
             var artistAlbums = await _albumRepository.GetAllByArtistAsync(artistId) ?? [];
-            var formattedAlbums = artistAlbums?.Select(_albumReturnMapping.Map).ToList();
+            var formattedAlbums = artistAlbums?.Select(_ => _.ToBaseDto()).ToList();
             return formattedAlbums;
         }
 
@@ -65,7 +59,7 @@ namespace IAlbumDB.Infrastructure.Services.Album
                 throw new Exception($"Album with Id:{Id} could not be found");
             }
 
-            return _albumDetailsMapping.Map(album);
+            return album.ToDetailedDto();
         }
 
         /// <summary>

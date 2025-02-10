@@ -1,26 +1,19 @@
 ﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
 using IAlbumDB.Domain.DTOs.Return.Artists;
 using IAlbumDB.Domain.Entities.Artists;
-using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Artist;
 using IAlbumDB.Domain.Interfaces.Services.Artist;
+using IAlbumDB.Infrastructure.Extensions;
 
 namespace IAlbumDB.Infrastructure.Services.Artist
 {
     public class ArtistServices : IArtistService
     {
         protected readonly IArtistRepository _artistRepository;
-        private readonly IMapping<ArtistDetails, ArtistEntity> _artistDetailedMapping;
-        private readonly IMapping<ArtistBase, ArtistEntity> _artistReturnMapping;
 
-        public ArtistServices(IArtistRepository artistRepository,
-            IMapping<ArtistDetails, ArtistEntity> artistDetailedMapping,
-            IMapping<ArtistBase, ArtistEntity> artistReturnMapping,
-            IMapping<ArtistBase, ArtistEntity> artistCreateMapping)
+        public ArtistServices(IArtistRepository artistRepository)
         {
             _artistRepository = artistRepository;
-            _artistDetailedMapping = artistDetailedMapping;
-            _artistReturnMapping = artistReturnMapping;
         }
 
         /// <summary>
@@ -30,7 +23,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         public async Task<IList<ArtistBase>?> GetAllArtistAsync()
         {
             var artists = await _artistRepository.GetAllArtistAsync();
-            var formattedArtists = artists?.Select(_artistReturnMapping.Map).ToList();
+            var formattedArtists = artists?.Select(_ => _.ToBaseDto()).ToList();
             return formattedArtists;
         }
 
@@ -42,7 +35,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         {
             var artist = await _artistRepository.GetArtistByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
-            return _artistDetailedMapping.Map(artist);
+            return artist.ToDetailedDto();
         }
 
         /// <summary>
@@ -64,7 +57,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
             {
                 Id = Guid.NewGuid(),
                 Name = artist.Name,
-                Members = artist.Members?.ToList(),
+                Musicians = artist.Members?.ToList(),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -89,7 +82,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
             var updateArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
             updateArtist.Name = artist.Name;
-            updateArtist.Members = artist.Members?.ToList();
+            updateArtist.Musicians = artist.Members?.ToList();
             updateArtist.UpdatedAt = DateTime.UtcNow;
 
             await _artistRepository.UpdateEntityAsync(updateArtist);
@@ -101,12 +94,12 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         /// </summary>
         public async Task SoftDeleteArtistAsync(Guid Id)
         {
-            var deleteArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
+            var deletedArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
-            deleteArtist.IsActive = false;
-            deleteArtist.UpdatedAt = DateTime.UtcNow;
+            deletedArtist.IsActive = false;
+            deletedArtist.UpdatedAt = DateTime.UtcNow;
 
-            await _artistRepository.UpdateEntityAsync(deleteArtist);
+            await _artistRepository.UpdateEntityAsync(deletedArtist);
         }
     }
 }

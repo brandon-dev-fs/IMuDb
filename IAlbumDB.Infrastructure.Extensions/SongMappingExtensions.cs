@@ -5,14 +5,15 @@ using IAlbumDB.Domain.Entities.Songs;
 
 namespace IAlbumDB.Infrastructure.Extensions
 {
-    public static class MappingExtensions
+    public static class SongMappingExtensions
     {
-        public static SongDetails ToDto(this SongEntity song)
+        public static SongDetails ToDetailedDto(this SongEntity song)
         {
             return new SongDetails
             {
                 Id = song.Id,
                 Name = song.Name,
+                Track = song.Track,
                 Length = song.Length,
                 Genre = song.Genre ?? string.Empty,
                 Lyrics = song.Lyrics ?? string.Empty,
@@ -24,10 +25,21 @@ namespace IAlbumDB.Infrastructure.Extensions
                     {
                         Id = song.Artist?.Id,
                         Name = song.Artist.Name,
-                        Members = song.Artist.Members ?? new List<string>()
+                        Members = song.Artist.Musicians ?? new List<string>()
                     },
                 },
                 UpdatedAt = song.UpdatedAt
+            };
+        }
+
+        public static SongBase ToBaseDto(this SongEntity song)
+        {
+            return new SongBase
+            {
+                Id = song.Id,
+                Name = song.Name,
+                Track = song.Track,
+                Length = song.Length
             };
         }
     }
