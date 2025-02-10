@@ -66,7 +66,7 @@ namespace IAlbumDB.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Members")
+                    b.Property<string>("Musicians")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

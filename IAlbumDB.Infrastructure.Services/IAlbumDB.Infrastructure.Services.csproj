@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IAlbumDB.Domain\IAlbumDB.Domain.csproj" />
+    <ProjectReference Include="..\IAlbumDB.Infrastructure.Extensions\IAlbumDB.Infrastructure.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

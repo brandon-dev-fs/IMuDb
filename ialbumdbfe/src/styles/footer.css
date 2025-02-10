@@ -1,0 +1,11 @@
+.footer {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: #ffffff;
+    background-color: var(--color-grey);
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    /* border-top: 2px var(--color-black) solid; */
+}

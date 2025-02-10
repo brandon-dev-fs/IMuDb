@@ -1,12 +1,13 @@
-﻿using IAlbumDB.Domain.DTOs.Albums;
-using IAlbumDB.Domain.DTOs.Songs;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Albums;
+using IAlbumDB.Domain.DTOs.CreateUpdate.Songs;
+using IAlbumDB.Domain.DTOs.Return.Albums;
 using IAlbumDB.Domain.Entities.Albums;
 using IAlbumDB.Domain.Entities.Songs;
 using IAlbumDB.Domain.Exceptions;
-using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Albums;
 using IAlbumDB.Domain.Interfaces.Repositories.Artist;
 using IAlbumDB.Domain.Interfaces.Services.Album;
+using IAlbumDB.Infrastructure.Extensions;
 
 namespace IAlbumDB.Infrastructure.Services.Album
 {
@@ -14,32 +15,23 @@ namespace IAlbumDB.Infrastructure.Services.Album
     {
         protected readonly IAlbumRepository _albumRepository;
         protected readonly IArtistRepository _artistRepository;
-        private readonly IMapping<AlbumCreateDto, AlbumEntity> _albumCreateMapping;
-        private readonly IMapping<AlbumDetailsDto, AlbumEntity> _albumDetailsMapping;
-        private readonly IMapping<AlbumReturnDto, AlbumEntity> _albumReturnMapping;
 
         public AlbumServices(
             IAlbumRepository albumRepository,
-            IArtistRepository artistRepository,
-            IMapping<AlbumCreateDto, AlbumEntity> albumCreateMapping,
-            IMapping<AlbumDetailsDto, AlbumEntity> albumDetailsMapping,
-            IMapping<AlbumReturnDto, AlbumEntity> albumReturnMapping)
+            IArtistRepository artistRepository)
         {
             _albumRepository = albumRepository;
             _artistRepository = artistRepository;
-            _albumCreateMapping = albumCreateMapping;
-            _albumDetailsMapping = albumDetailsMapping;
-            _albumReturnMapping = albumReturnMapping;
         }
 
         /// <summary>
         /// Gets All Albums intersected with Songs and Artist return DTO's
         /// </summary>
         /// <returns>IList<AlbumReturnDto></returns>
-        public async Task<IList<AlbumReturnDto>?> GetAllAlbumsAsync()
+        public async Task<IList<AlbumBase>?> GetAllAlbumsAsync()
         {
             var albums = await _albumRepository.GetAllAlbumsAsync() ?? [];
-            var formattedAlbums = albums?.Select(_albumReturnMapping.MapToDto).ToList();
+            var formattedAlbums = albums?.Select(_ => _.ToBaseDto()).ToList();
             return formattedAlbums;
         }
 
@@ -47,64 +39,64 @@ namespace IAlbumDB.Infrastructure.Services.Album
         /// Gets All Albums intersected with Songs and Artist return DTO's filtered by the Artist's Id
         /// </summary>
         /// <returns>IList<AlbumReturnDto></returns>
-        public async Task<IList<AlbumReturnDto>?> GetAllAlbumsByArtistAsync(Guid artistId)
+        public async Task<IList<AlbumBase>?> GetAllAlbumsByArtistAsync(Guid artistId)
         {
             var artistAlbums = await _albumRepository.GetAllByArtistAsync(artistId) ?? [];
-            var formattedAlbums = artistAlbums?.Select(_albumReturnMapping.MapToDto).ToList();
+            var formattedAlbums = artistAlbums?.Select(_ => _.ToBaseDto()).ToList();
             return formattedAlbums;
         }
 
         /// <summary>
-        /// Gets a single Albums detailed DTO by ID intersected with Song and Artists Detailed DTO 
+        /// Gets a single Albums detailed DTO by Id intersected with Song and Artists Detailed DTO 
         /// </summary>
         /// <returns>AlbumDetailsDto</returns>
-        public async Task<AlbumDetailsDto> GetAlbumByIdAsync(Guid id)
+        public async Task<AlbumDetails> GetAlbumByIdAsync(Guid Id)
         {
-            var album = await _albumRepository.GetAlbumByIdAsync(id);
+            var album = await _albumRepository.GetAlbumByIdAsync(Id);
 
             if (album == null)
             {
-                throw new Exception($"Album with id:{id} could not be found");
+                throw new Exception($"Album with Id:{Id} could not be found");
             }
 
-            return _albumDetailsMapping.MapToDto(album);
+            return album.ToDetailedDto();
         }
 
         /// <summary>
         /// Creates a new album after first checking the artist exist and that the artist does not have an album by the same name
         /// </summary>
         /// <returns>Guid</returns>
-        public async Task<Guid> CreateAlbumAsync(AlbumCreateDto album)
+        public async Task<Guid> CreateAlbumAsync(AlbumCU album)
         {
             if (!(album.Songs.Count > 0))
             {
                 throw new MissingSongsException("Album cannot be created without songs attached");
             }
 
-            var Artist = await _artistRepository.GetByIdAsync(album.ArtistId);
+            var artist = await _artistRepository.GetByIdAsync((Guid)album.Artist.Id);
 
-            if (Artist == null)
+            if (artist == null)
             {
-                throw new Exception($"Artist with Id:{album.ArtistId} does not exist. Cannot create an album without an album.");
+                throw new Exception($"Artist with Id:{album.Artist.Id} does not exist. Cannot create an album without an album.");
             }
 
-            if (await _albumRepository.GetAlbumByNameAndArtistAsync(album.Name, album.ArtistId) != null)
+            if (await _albumRepository.GetAlbumByNameAndArtistAsync(album.Name, (Guid)album.Artist.Id) != null)
             {
-                throw new Exception($"Album with {album.Name} by artist {album.ArtistId} already exists");
+                throw new Exception($"Album with {album.Name} by artist {album.Artist.Id} already exists");
             }
 
             AlbumEntity newAlbum = new AlbumEntity
             {
                 Id = Guid.NewGuid(),
                 Name = album.Name,
-                ArtistId = Artist.Id,
+                Artist = artist,
                 Year = album.Year,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
 
-            foreach (SongCreateDto Song in album.Songs)
+            foreach (SongCU Song in album.Songs)
             {
                 newAlbum.Songs.Add(new SongEntity
                 {
@@ -114,7 +106,7 @@ namespace IAlbumDB.Infrastructure.Services.Album
                     Length = Song.Length,
                     Lyrics = Song.Lyrics,
                     Genre = Song.Genre,
-                    ArtistId = Artist.Id,
+                    Artist = artist,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -129,13 +121,13 @@ namespace IAlbumDB.Infrastructure.Services.Album
         /// <summary>
         /// Update and Delete do similar functions update allows for updates to an albums name and year while delete changes active flag to false
         /// </summary>
-        public async Task UpdateAlbumAsync(AlbumUpdateDto data)
+        public async Task UpdateAlbumAsync(Guid Id, AlbumCU data)
         {
-            var updateAlbum = await _albumRepository.GetByIdAsync(data.Id);
+            var updateAlbum = await _albumRepository.GetByIdAsync(Id);
 
             if (updateAlbum == null)
             {
-                throw new Exception($"Album with id:{data.Id} could not be found");
+                throw new Exception($"Album with Id:{Id} could not be found");
             }
 
             updateAlbum.Name = data.Name;
@@ -145,13 +137,13 @@ namespace IAlbumDB.Infrastructure.Services.Album
             await _albumRepository.UpdateEntityAsync(updateAlbum);
         }
 
-        public async Task DeleteAlbumAsync(Guid id)
+        public async Task DeleteAlbumAsync(Guid Id)
         {
-            var deleteAlbum = await _albumRepository.GetByIdAsync(id);
+            var deleteAlbum = await _albumRepository.GetByIdAsync(Id);
 
             if (deleteAlbum == null)
             {
-                throw new Exception($"Album with id:{id} could not be found");
+                throw new Exception($"Album with Id:{Id} could not be found");
             }
 
             deleteAlbum.IsActive = false;

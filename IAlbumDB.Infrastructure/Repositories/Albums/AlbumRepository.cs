@@ -18,9 +18,9 @@ namespace IAlbumDB.Infrastructure.Repositories.Albums
             return await _context.Albums.Where(al => al.Artist.Id == artistId).Include(a => a.Artist).Include(a => a.Songs.OrderBy(s => s.Track)).AsNoTracking().ToListAsync();
         }
 
-        public async Task<AlbumEntity?> GetAlbumByIdAsync(Guid id)
+        public async Task<AlbumEntity?> GetAlbumByIdAsync(Guid Id)
         {
-            return await _context.Albums.Where(al => al.Id == id).Include(a => a.Artist).Include(a => a.Songs.OrderBy(s => s.Track)).AsNoTracking().FirstOrDefaultAsync();
+            return await _context.Albums.Where(al => al.Id == Id).Include(a => a.Artist).Include(a => a.Songs.OrderBy(s => s.Track)).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<AlbumEntity?> GetAlbumByNameAndArtistAsync(string name, Guid artistId)

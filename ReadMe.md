@@ -1,6 +1,7 @@
-# Internet Music Database API
+# Internet Music Database
 
 This project is meant as a personal project for demonstration and development with skills in RESTful API's, Clean Architecture, and SOLID OOP implementation.
+Included is a React UI Client that consumes the API.
 
 ## Description
 
@@ -25,13 +26,15 @@ basic URI supported `https://localhost:{port}/api/{controller}`
 
 **Album**
 
-| Verb     | Route                        | Return Codes |
-| -------- | ---------------------------- | ------------ |
-| `Get`    | `/album?artistId={optional}` | 200 / 400    |
-| `Get`    | `/album/{albumId}`           | 200 / 400    |
-| `Post`   | `/album`                     | 200 / 400    |
-| `Put`    | `/album`                     | 204 / 400    |
-| `Delete` | `/album/{albumId}`           | 204 / 400    |
+| Verb     | Route                            | Return Codes |
+| -------- | -------------------------------- | ------------ |
+| `Get`    | `/album?artistId={optional}`     | 200 / 400    |
+| `Get`    | `/album/{albumId}`               | 200 / 400    |
+| `Post`   | `/album`                         | 200 / 400    |
+| `Put`    | `/album`                         | 204 / 400    |
+| `Delete` | `/album/{albumId}`               | 204 / 400    |
+| `Get`    | `/album/{albumId}/song/{songId}` | 200 / 400    |
+| `Put`    | `/album/{albumId}/song/{songId}` | 204 / 400    |
 
 **Artist**
 
@@ -43,13 +46,6 @@ basic URI supported `https://localhost:{port}/api/{controller}`
 | `Put`    | `/artist`            | 204 / 400    |
 | `Delete` | `/artist/{artistId}` | 204 / 400    |
 
-**Song**
-
-| Verb  | Route            | Return Codes |
-| ----- | ---------------- | ------------ |
-| `Get` | `/song`          | 200 / 400    |
-| `Get` | `/song/{songId}` | 200 / 400    |
-| `Put` | `/song`          | 204 / 400    |
 
 ### Models
 
@@ -67,6 +63,17 @@ basic URI supported `https://localhost:{port}/api/{controller}`
 
 #### Song Models
 
-| SongUpdate                                           | SongDetails                                                                                                                                                                                      | SongReturn                                                                      |
+| SongCU                                           | SongDetails                                                                                                                                                                                      | SongReturn                                                                      |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
 | <pre>{<br>"Id": Guid,<br>"Lyrics": string,<br>}<pre> | <pre>{<br>"Id": Guid,<br>"Name": string,<br>"Length": int,<br>"Track": int,<br>"Genre": string,<br>"Lyrics": string,<br>"Album": {<br>},<br>"Artist: {<br>},<br>"UpdatedAt": DateTime<br>}</pre> | <pre>{<br>"Id": Guid,<br>"Name": string,<br>"Length": int,<br>"Track": int<br>} |
+
+
+## Front End UI
+### React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

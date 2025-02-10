@@ -1,57 +1,51 @@
-﻿using IAlbumDB.Domain.DTOs.Artist;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
+using IAlbumDB.Domain.DTOs.Return.Artists;
 using IAlbumDB.Domain.Entities.Artists;
-using IAlbumDB.Domain.Interfaces.Mapper;
 using IAlbumDB.Domain.Interfaces.Repositories.Artist;
 using IAlbumDB.Domain.Interfaces.Services.Artist;
+using IAlbumDB.Infrastructure.Extensions;
 
 namespace IAlbumDB.Infrastructure.Services.Artist
 {
     public class ArtistServices : IArtistService
     {
         protected readonly IArtistRepository _artistRepository;
-        private readonly IMapping<ArtistDetailsDto, ArtistEntity> _artistDetailedMapping;
-        private readonly IMapping<ArtistReturnDto, ArtistEntity> _artistReturnMapping;
-        private readonly IMapping<ArtistReturnDto, ArtistEntity> _artistCreateMapping;
 
-        public ArtistServices(IArtistRepository artistRepository,
-            IMapping<ArtistDetailsDto, ArtistEntity> artistDetailedMapping,
-            IMapping<ArtistReturnDto, ArtistEntity> artistReturnMapping,
-            IMapping<ArtistReturnDto, ArtistEntity> artistCreateMapping)
+        public ArtistServices(IArtistRepository artistRepository)
         {
             _artistRepository = artistRepository;
-            _artistDetailedMapping = artistDetailedMapping;
-            _artistReturnMapping = artistReturnMapping;
-            _artistCreateMapping = artistCreateMapping;
         }
 
         /// <summary>
         /// Gets All Artist with DTO artistReturnDto for a lightweight 
         /// </summary>
         /// <returns>IList<ArtistReturnDto>?</returns>
-        public async Task<IList<ArtistReturnDto>?> GetAllArtistAsync()
+        public async Task<IList<ArtistBase>?> GetAllArtistAsync()
         {
             var artists = await _artistRepository.GetAllArtistAsync();
-            var formattedArtists = artists?.Select(_artistReturnMapping.MapToDto).ToList();
+            var formattedArtists = artists?.Select(_ => _.ToBaseDto()).ToList();
             return formattedArtists;
         }
 
         /// <summary>
         /// Gets All An Artist details intersected with their albums by Id
         /// </summary>
-        /// <returns>IList<ArtistReturnDto>?</returns>
-        public async Task<ArtistDetailsDto?> GetArtistByIdAsync(Guid id)
+        /// <returns type="IEnumerable<ArtistR>">IList<ArtistReturnDto>?</returns>
+        public async Task<ArtistDetails?> GetArtistByIdAsync(Guid Id)
         {
-            var artist = await _artistRepository.GetArtistByIdAsync(id);
+            var artist = await _artistRepository.GetArtistByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
-            if (artist == null)
-            {
-                throw new Exception($"Artist with Id:{id} could not be found.");
-            }
-
-            return _artistDetailedMapping.MapToDto(artist);
+            return artist.ToDetailedDto();
         }
 
-        public async Task<Guid> CreateArtistAsync(ArtistCreateDto artist)
+        /// <summary>
+        /// Creates a new artist for the database
+        /// ### Done
+        /// </summary>
+        /// <param name="artist"></param>
+        /// <returns type="Guid"></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<Guid> CreateArtistAsync(ArtistCU artist)
         {
             // No duplicate artist / band names 
             if (await _artistRepository.FindArtistByNameAsync(artist.Name) != null)
@@ -63,7 +57,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
             {
                 Id = Guid.NewGuid(),
                 Name = artist.Name,
-                Members = artist.Members?.ToList(),
+                Musicians = artist.Members?.ToList(),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -75,37 +69,37 @@ namespace IAlbumDB.Infrastructure.Services.Artist
         }
 
         /// <summary>
-        /// Update and Delete do similar functions update allows for updates to an artist or bands members and year while delete changes active flag to false
+        /// Update allows you to change the member values and other values to be added to the db
+        /// ### Done
         /// </summary>
-        public async Task UpdateArtistAsync(ArtistUpdateDto artist)
+        public async Task UpdateArtistAsync(Guid Id, ArtistCU artist)
         {
-            var updateArtist = await _artistRepository.GetByIdAsync(artist.Id);
-
-            if (updateArtist == null)
+            if (Id == Guid.Empty)
             {
-                throw new Exception($"Artist with Id:{artist.Id} could not be found.");
+                throw new Exception($"Artist must have Id to update");
             }
 
-            // blanket update limited cost no need to check for differences just set and update in db
-            updateArtist.Members = artist.Members?.ToList();
+            var updateArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
+
+            updateArtist.Name = artist.Name;
+            updateArtist.Musicians = artist.Members?.ToList();
             updateArtist.UpdatedAt = DateTime.UtcNow;
 
             await _artistRepository.UpdateEntityAsync(updateArtist);
         }
 
-        public async Task DeleteArtistAsync(Guid id)
+        /// <summary>
+        /// Soft deletes an artist
+        /// ### Done
+        /// </summary>
+        public async Task SoftDeleteArtistAsync(Guid Id)
         {
-            var deleteArtist = await _artistRepository.GetByIdAsync(id);
+            var deletedArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
-            if (deleteArtist == null)
-            {
-                throw new Exception($"Artist with Id:{id} could not be found.");
-            }
+            deletedArtist.IsActive = false;
+            deletedArtist.UpdatedAt = DateTime.UtcNow;
 
-            deleteArtist.IsActive = false;
-            deleteArtist.UpdatedAt = DateTime.UtcNow;
-
-            await _artistRepository.UpdateEntityAsync(deleteArtist);
+            await _artistRepository.UpdateEntityAsync(deletedArtist);
         }
     }
 }

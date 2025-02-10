@@ -1,4 +1,5 @@
-﻿using IAlbumDB.Domain.DTOs.Artist;
+﻿using IAlbumDB.Domain.DTOs.CreateUpdate.Artists;
+using IAlbumDB.Domain.DTOs.Return.Artists;
 using IAlbumDB.Domain.Interfaces.Services.Artist;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ArtistReturnDto>>> GetArtists()
+        public async Task<ActionResult<IList<ArtistBase>>> GetArtists()
         {
             try
             {
@@ -31,7 +32,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpGet("{artistId}")]
-        public async Task<ActionResult<ArtistDetailsDto>> GetArtist(Guid artistId)
+        public async Task<ActionResult<ArtistDetails>> GetArtist(Guid artistId)
         {
             try
             {
@@ -45,7 +46,7 @@ namespace IAlbumDB.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateArtist([FromBody] ArtistCreateDto newArtist)
+        public async Task<ActionResult<Guid>> CreateArtist([FromBody] ArtistCU newArtist)
         {
             try
             {
@@ -58,12 +59,12 @@ namespace IAlbumDB.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateArtist([FromBody] ArtistUpdateDto updateArtist)
+        [HttpPut("{artistId}")]
+        public async Task<ActionResult> UpdateArtist(Guid artistId, [FromBody] ArtistCU updateArtist)
         {
             try
             {
-                await _artistServices.UpdateArtistAsync(updateArtist);
+                await _artistServices.UpdateArtistAsync(artistId, updateArtist);
                 return NoContent();
             }
             catch (Exception ex)
@@ -77,7 +78,7 @@ namespace IAlbumDB.Controllers
         {
             try
             {
-                await _artistServices.DeleteArtistAsync(artistId);
+                await _artistServices.SoftDeleteArtistAsync(artistId);
                 return NoContent();
             }
             catch (Exception ex)
