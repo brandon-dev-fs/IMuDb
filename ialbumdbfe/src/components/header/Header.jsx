@@ -1,5 +1,5 @@
-import Navbar from './Navbar';
 import logo from '../../assets/logo/IMuDBRecordLogo.svg';
+import Navbar from './Navbar';
 
 export default function Header() {
 	return (

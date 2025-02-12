@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Card({ album }) {
+export default function AlbumCard({ album }) {
 	//For on click navigation
 	const navigate = useNavigate();
 	const navigateOnClick = (id) => {

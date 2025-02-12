@@ -1,14 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Footer from './general/components/Footer';
-import Header from './general/components/Header';
-import Home from './general/pages/Home';
-import AlbumDetails from './album/pages/AlbumDetails';
-import ArtistDetails from './artist/pages/ArtistDetails';
-import AlbumsPage from './album/pages/AlbumsPage';
-import ArtistsPage from './artist/pages/ArtistsPage';
-import AddUpdateArtistForm from './artist/forms/AddUpdateArtist';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AlbumDetailsPage from './components/album/AlbumDetailsPage';
+import AlbumsPage from './components/album/AlbumsPage';
+import ArtistDetailsPage from './components/artist/ArtistDetailsPage';
+import ArtistsPage from './components/artist/ArtistsPage';
+import Footer from './components/footer/Footer';
+import Header from './components/header/Header';
+import Home from './components/home/Home';
 import './styles/styles.css';
+
 
 function App() {
 	return (
@@ -18,13 +18,9 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/artists" element={<ArtistsPage />} />
-					<Route path="/artists/:id" element={<ArtistDetails />} />
-					<Route
-						path="/artist-edit"
-						element={<AddUpdateArtistForm />}
-					/>
+					<Route path="/artists/:id" element={<ArtistDetailsPage />} />
 					<Route path="/albums" element={<AlbumsPage />} />
-					<Route path="/albums/:id" element={<AlbumDetails />} />
+					<Route path="/albums/:id" element={<AlbumDetailsPage />} />
 				</Routes>
 			</div>
 			<Footer></Footer>

@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 // Stateless component used only for rendering list of artist
 // Artist are passed in and the list is rendered and styled based on that list
