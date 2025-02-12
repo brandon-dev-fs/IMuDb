@@ -18,25 +18,19 @@ export default function ArtistsPage() {
 	};
 
 	useEffect(() => {
-		async function getData() {
-			const retrievedArtists = await getArtist();
-
-			console.log(retrievedArtists)
-
-			if (retrievedArtists) {
+		getArtist()
+			.then(a => {
+				console.log(a);
 				setLoading(false);
-				setArtists(retrievedArtists);
-				setFilteredArtist(retrievedArtists);
-			}
-			else {
+				setArtists(a);
+				setFilteredArtist(a);
+			})
+			.catch(e => {
+                console.log(e);
 				setLoading(false);
 				setError(true);
-			}
-		}
-
-		getData();
-
-		console.log(filteredArtist)
+			})
+		
 	}, []);
 
 	if (loading || error) {

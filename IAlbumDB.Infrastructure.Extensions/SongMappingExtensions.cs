@@ -25,7 +25,7 @@ namespace IAlbumDB.Infrastructure.Extensions
                     {
                         Id = song.Artist?.Id,
                         Name = song.Artist.Name,
-                        Members = song.Artist.Musicians ?? new List<string>()
+                        Musicians = song.Artist.Musicians ?? new List<string>()
                     },
                 },
                 UpdatedAt = song.UpdatedAt

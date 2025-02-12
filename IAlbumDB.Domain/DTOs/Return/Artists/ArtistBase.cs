@@ -2,6 +2,6 @@
 {
     public class ArtistBase : BaseReturnDto
     {
-        public IList<string>? Members { get; init; }
+        public IList<string>? Musicians { get; init; }
     }
 }

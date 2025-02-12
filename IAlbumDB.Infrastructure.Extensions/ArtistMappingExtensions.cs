@@ -22,7 +22,7 @@ namespace IAlbumDB.Infrastructure.Extensions
             {
                 Id = artist.Id,
                 Name = artist.Name,
-                Members = artist.Musicians
+                Musicians = artist.Musicians
             };
         }
     }

@@ -17,25 +17,17 @@ export default function AlbumsPage() {
     };
 
     useEffect(() => {
-        async function getData() {
-            const retrievedAlbums = await getAlbums();
-
-            console.log(retrievedAlbums)
-
-            if (retrievedAlbums) {
+        getAlbums()
+            .then(a => {
+                console.log(a);
                 setLoading(false);
-                setAlbums(retrievedAlbums);
-                setFilteredAlbums(retrievedAlbums);
-            }
-            else {
+                setAlbums(a);
+                setFilteredAlbums(a);
+            }).catch(e => {
+                console.log(e);
                 setLoading(false);
                 setError(true);
-            }
-        }
-
-        getData();
-
-        console.log(filteredAlbums)
+            });
     }, []);
 
     if (loading || error) {

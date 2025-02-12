@@ -4,29 +4,23 @@ import { getAlbumById } from '../../services/httprequest';
 import Song from '../song/Song';
 
 export default function AlbumDetailsPage() {
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
 	const params = useParams();
 	const albumId = params.id;
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
 	const [album, setAlbum] = useState(null);
 
 	useEffect(() => {
-		async function getData() {
-			const retrievedAlbum = await getAlbumById(albumId);
-
-			console.log(retrievedAlbum)
-
-			if (retrievedAlbum) {
+		getAlbumById(albumId)
+			.then(a => {
+				console.log(a);
 				setLoading(false);
-				setAlbum(retrievedAlbum);
-			}
-			else {
+				setAlbum(a);
+			}).catch(e => {
+				console.log(e);
 				setLoading(false);
 				setError(true);
-			}
-		}
-
-		getData();
+			});
 	}, []);
 
 	if (loading || error) {

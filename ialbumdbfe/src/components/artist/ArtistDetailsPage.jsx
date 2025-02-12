@@ -10,22 +10,17 @@ export default function ArtistDetailsPage() {
     const [artist, setArtist] = useState(null);
 
     useEffect(() => {
-        async function getData() {
-            const artist = await getArtistById(artistId);
-
-            console.log(artist)
-
-            if (artist) {
+        getArtistById(artistId)
+            .then(a => {
+                console.log(a);
                 setLoading(false);
-                setArtist(artist);
-            }
-            else {
+                setArtist(a);
+            })
+            .catch(e => {
+                console.log(e)
                 setLoading(false);
                 setError(true);
-            }
-        }
-
-        getData();
+            });
     }, []);
 
     if (loading || error) {
