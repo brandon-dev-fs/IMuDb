@@ -3,7 +3,7 @@ using IAlbumDB.Domain.Entities.Albums;
 
 namespace IAlbumDB.Infrastructure.Extensions
 {
-    public static class AlbumMappingExtensions
+    public static class AlbumEntityExtensions
     {
         public static AlbumDetails ToDetailedDto(this AlbumEntity album)
         {

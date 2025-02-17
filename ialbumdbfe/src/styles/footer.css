@@ -4,8 +4,8 @@
     color: #ffffff;
     background-color: var(--color-grey);
     text-align: center;
-    position: fixed;
-    bottom: 0;
+/*    position: fixed;
+    bottom: 0;*/
     width: 100%;
     /* border-top: 2px var(--color-black) solid; */
 }

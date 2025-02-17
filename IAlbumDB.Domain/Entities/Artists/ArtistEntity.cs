@@ -8,5 +8,6 @@ namespace IAlbumDB.Domain.Entities.Artists
         public IList<string>? Musicians { get; set; }
         public IList<AlbumEntity>? Albums { get; set; }
         public IList<SongEntity>? Songs { get; set; }
+        public ArtistType Type { get; set; }
     }
 }

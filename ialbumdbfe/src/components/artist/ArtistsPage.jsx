@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { getArtist } from '../../services/httprequest';
 import ArtistList from './ArtistList';
+import AddUpdateArtistForm from './AddUpdateArtist';
 
 export default function ArtistsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [artists, setArtists] = useState([]);
+	const [editing, setEditing] = useState(false);
 	const [filteredArtist, setFilteredArtist] = useState([]);
+	const [editArtist, setEditArtist] = useState(null);
+	const [formToggle, setFormToggle] = useState(false)
 
 	// When the search bar is updated to a new search term it updates the term value
 	const handleSearch = (e) => {
@@ -30,8 +34,13 @@ export default function ArtistsPage() {
 				setLoading(false);
 				setError(true);
 			})
-		
-	}, []);
+
+	}, [editing]);
+
+	const handleAdd = () => {
+		console.log('add');
+		setEditArtist({})
+	}
 
 	if (loading || error) {
 		return (
@@ -53,8 +62,8 @@ export default function ArtistsPage() {
 								placeholder="Search Artist"
 								onChange={handleSearch}
 							/>
-							<button className="button add-button">
-								Add
+							<button type="button" onClick={() => setFormToggle(true)} className="button add-button">
+								Add New Artist
 							</button>
 						</div>
 						<div className="p-md">
@@ -64,6 +73,11 @@ export default function ArtistsPage() {
 						</div>
 					</>
 				)}
+				{
+					formToggle && (
+						<AddUpdateArtistForm editArtist={editArtist} setFormToggle={setFormToggle} />
+					)
+				}
 			</div>
 		);
 	}

@@ -21,6 +21,7 @@ function App() {
 					<Route path="/artists/:id" element={<ArtistDetailsPage />} />
 					<Route path="/albums" element={<AlbumsPage />} />
 					<Route path="/albums/:id" element={<AlbumDetailsPage />} />
+					
 				</Routes>
 			</div>
 			<Footer></Footer>

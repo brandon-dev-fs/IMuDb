@@ -36,10 +36,10 @@ export default function ArtistDetailsPage() {
                 <h2>{artist.name}</h2>
             </div>
             <div className="flex-container p-md">
-                {artist.members && (
+                {artist.musicians && (
                     <div className="p-sm">
-                        <h3>Members</h3>
-                        {artist.members.map((m, i) => (
+                        <h3>Musicians</h3>
+                        {artist.musicians.map((m, i) => (
                             <p key={i}>{m}</p>
                         ))}
                     </div>

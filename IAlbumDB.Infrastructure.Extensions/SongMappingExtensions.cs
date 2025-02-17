@@ -5,7 +5,7 @@ using IAlbumDB.Domain.Entities.Songs;
 
 namespace IAlbumDB.Infrastructure.Extensions
 {
-    public static class SongMappingExtensions
+    public static class SongEntityExtensions
     {
         public static SongDetails ToDetailedDto(this SongEntity song)
         {

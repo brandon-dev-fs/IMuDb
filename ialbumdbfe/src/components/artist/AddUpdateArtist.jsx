@@ -1,130 +1,124 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { updateArtist, addArtist } from '../../services/httprequest';
 
-export default function AddUpdateArtistForm() {
-	const [artistEdit, setArtist] = useState({
-		name: '',
-		members: [],
+export default function AddUpdateArtistForm({ editArtist, setFormToggle }) {
+	const [artist, setArtist] = useState({
+			name: "",
+			type: 0,
+			musicians: []
 	});
-	const [memberEdit, setMemberEdit] = useState('');
+	
+	const [newArtist, setNewArtist] = useState(true);
+	const [musician, setMusician] = useState("");
 
-	const addMember = () => {
-		console.log('addMember');
-		setArtist({
-			members: [...artistEdit.members, memberEdit],
-		});
-		setMemberEdit('');
-	};
+	useEffect(() => {
+		if (editArtist) {
+			setArtist(editArtist);
+			setNewArtist(false);
+			setMusicians([...editArtist.members])
+		}
+	}, [])
 
-	const subMember = (i) => {
-		console.log('subMember');
-		setArtist({
-			members: artistEdit.members.filter((m, id) => id !== i),
-		});
-	};
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setArtist((prevArtist) => ({ ...prevArtist, [name]: value }));
+	}
 
-	const updateArtistName = (e) => {
-		setArtist({
-			name: e.target.value,
-			members: artistEdit.members,
-		});
-	};
-
-	const submit = (e) => {
+	const handleSubmission = (e) => {
 		e.preventDefault();
 
-		const ROOT_API = 'https://localhost:3001/api/';
-		const url = `${ROOT_API}artist`;
+		console.log(artist);
 
-		// const headers = new Headers();
-		// headers.append('Content-Type', 'application/json');
-		// headers.append('Accept', 'application/json');
-		// //headers.append('Access-Control-Allow-Origin', '*');
-
-		// const request = new Request(url, {
-		// 	method: 'POST',
-		// 	body: JSON.stringify(artistEdit),
-		// 	mode: 'no-cors',
-		// 	headers: headers,
-		// });
-
-		try {
-			const response = fetch(url, {
-				method: 'POST',
-				body: JSON.stringify(artistEdit),
-				mode: 'no-cors',
-				headers: {
-					Accept: 'application/json, text/plain',
-					'Content-Type': 'application/json; charset=utf-8',
-				},
-			});
-			// .then((d) => {
-			// 	if (d.status === 200) {
-			// 		setArtist({
-			// 			name: '',
-			// 			members: [],
-			// 		});
-			// 		setMemberEdit('');
-			// 	} else {
-			// 		throw d.text;
-			// 	}
-			//});
-			console.log(response);
-		} catch (error) {
-			console.log(error);
+		if (artist.type == 0) {
+			setArtist((prevArtist) => ({
+				...prevArtist,
+				musicians: []
+			}));
 		}
-	};
+
+		if (editArtist) {
+			updateArtist(artist.id, artist);
+		}
+		else {
+			addArtist(artist);
+		}
+
+		console.log("submitted");
+
+		cleanAndClose();
+	}
+
+	const handleAdd = () => {
+		if (artist.type == 1) {
+			setArtist((prevArtist) => ({
+				...prevArtist,
+				musicians: [...prevArtist.musicians, musician]
+			}));
+		}
+
+		setMusician("");
+	}
+
+	const cleanAndClose = () => {
+		setArtist({
+			name: "",
+			type: 0,
+			members: []
+		});
+		setFormToggle(false);
+		if (newArtist === false) {
+			setNewArtist(true);
+		}
+	}
 
 	return (
-		<div className="container">
-			<div className="page-banner p-md">
-				<h2>Add new artist</h2>
+		<div>
+			<div className="form-banner p-sm">
+				{newArtist ? (<h2>Add New Artist </h2>) : (<h2>Edit {artist.name}</h2>)}
+				<button className="button" onClick={() => cleanAndClose() }>
+					Close
+				</button>
 			</div>
-			<form className=" p-md" onSubmit={submit}>
+			<form className=" p-md" onSubmit={handleSubmission}>
 				<div className="p-sm">
-					<label id="artist-name">Artist Name </label>
+					<label htmlFor="artist-name">Artist Name</label>
 					<input
 						type="text"
-						htmlFor="artist-name"
-						onChange={updateArtistName}
+						id="artist-name"
+						name="name"
+						value={artist.name}
+						placeholder="Enter an Artist Name"
+						onChange={e => setArtist((prevArtist) => ({ ...prevArtist, name: e.target.value }))}
+						required
 					/>
 				</div>
+				<fieldset className="p-sm">
+					<legend>Artist Type</legend>
+					<input id="solo" name="type" type="radio" value={0} onChange={e => setArtist((prevArtist) => ({ ...prevArtist, type: 0 }))} defaultChecked={true} />
+					<label htmlFor="solo">Solo</label>
+					<br />
+					<input id="band" name="type" type="radio" value={1} onChange={e => setArtist((prevArtist) => ({ ...prevArtist, type: 1 }))} />
+					<label htmlFor="band">Band</label>
+				</fieldset>
+				{
+					artist.type == 1 && (
+						<fieldset className="p-sm">
+							<legend>Musicians</legend>
+							<input type="text" value={musician} placeholder="Add a musician" onChange={e => setMusician(e.target.value)} />
+							<button type="button" onClick={handleAdd}>Add</button>
+							<ul>
+								{artist.musicians.map((m, i) => (
+									<li key={i}>
+										{m}
+									</li>
+								))}
+							</ul>
+						</fieldset>
+					)
+				}
 				<div className="p-sm">
-					<label>Members (leave blank if single artist)</label>
-					<div>
-						<input
-							type="text"
-							id=""
-							value={memberEdit}
-							onChange={(e) => {
-								setMemberEdit(e.target.value);
-							}}
-						/>
-						<button
-							type="button"
-							disabled={memberEdit === ''}
-							onClick={addMember}
-						>
-							+
-						</button>
-					</div>
-					{artistEdit.members.length > 0 &&
-						artistEdit.members.map((m, i) => (
-							<div key={i}>
-								<span>
-									{m}{' '}
-									<button
-										type="button"
-										onClick={() => subMember(i)}
-									>
-										-
-									</button>
-								</span>
-							</div>
-						))}
-				</div>
-				<div className="p-sm">
-					<button type="submit" disabled={artistEdit.name === ''}>
-						Add
+					<button type="submit">
+						{newArtist ? 'Add' : 'Update'}
 					</button>
 				</div>
 			</form>

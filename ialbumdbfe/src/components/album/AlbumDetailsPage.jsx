@@ -9,6 +9,7 @@ export default function AlbumDetailsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [album, setAlbum] = useState(null);
+    const [selectedSong, setSelectedSong] = useState(null);
 
 	useEffect(() => {
 		getAlbumById(albumId)
@@ -22,6 +23,11 @@ export default function AlbumDetailsPage() {
 				setError(true);
 			});
 	}, []);
+
+	const handleSelect = (song) => {
+		console.log("clicked")
+		setSelectedSong(song);
+	}
 
 	if (loading || error) {
 		return (
@@ -40,10 +46,17 @@ export default function AlbumDetailsPage() {
 					</h2>
 				</div>
 				<div className="p-md">
-					{album.songs.map((song) => (
-						<Song key={song.id} song={song} />
-					))}
+					<ul>
+						{album.songs.map((song) => (
+							<li key={ song.id } onClick={() => handleSelect(song)}>
+								{song.track} {song.name} 
+							</li>
+						))}
+					</ul>
 				</div>
+				{selectedSong && (
+					<Song albumId={albumId} song={selectedSong} setSong={setSelectedSong} />
+				)}
 			</div>
 		)
 	}

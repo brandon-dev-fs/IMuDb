@@ -57,7 +57,8 @@ namespace IAlbumDB.Infrastructure.Services.Artist
             {
                 Id = Guid.NewGuid(),
                 Name = artist.Name,
-                Musicians = artist.Members?.ToList(),
+                Musicians = artist.Type == ArtistType.Band ? artist.Musicians?.ToList(): new List<string> { artist.Name },
+                Type = artist.Type,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -82,7 +83,7 @@ namespace IAlbumDB.Infrastructure.Services.Artist
             var updateArtist = await _artistRepository.GetByIdAsync(Id) ?? throw new Exception($"Artist with Id:{Id} could not be found.");
 
             updateArtist.Name = artist.Name;
-            updateArtist.Musicians = artist.Members?.ToList();
+            updateArtist.Musicians = artist.Musicians?.ToList();
             updateArtist.UpdatedAt = DateTime.UtcNow;
 
             await _artistRepository.UpdateEntityAsync(updateArtist);

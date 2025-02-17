@@ -5,6 +5,7 @@
 @import './card.css';
 @import './page.css';
 @import './search.css';
+@import './form.css';
 
 :root {
     --color-primary:#BB7743;
@@ -22,6 +23,7 @@ html, body {
     background-color: var(--color-primary);
     color: var(--color-black);
     height: 100%;
+    margin:0;
 }
 
 ul {
@@ -56,6 +58,11 @@ ul>li {
 
 .p-lg {
     padding: 3rem;
+}
+
+input {
+    margin: 1rem;
+    padding: 2px;
 }
 
 /*
