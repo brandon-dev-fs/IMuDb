@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getArtistById } from '../../services/httprequest';
+import Loading from '../loading/loading';
+import { useNavigate } from 'react-router-dom';
 
 export default function ArtistDetailsPage() {
     const params = useParams();
     const artistId = params.id;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [artist, setArtist] = useState(null);
+    const [artist, setArtist] = useState({});
+
+    const navigate = useNavigate();
+    const navigateOnClick = (id) => {
+        navigate(`/albums/${id}`);
+    };
 
     useEffect(() => {
         getArtistById(artistId)
@@ -23,37 +30,44 @@ export default function ArtistDetailsPage() {
             });
     }, []);
 
+
+
     if (loading || error) {
         return (<div>
-            {loading && <h2>Loading...</h2>}
+            {loading && <Loading />}
             {error && <h2>Error</h2>}
         </div>
         );
     } else {
         return (<div className="container">
-            <div className="page-banner p-md">
-                <h2>Artist</h2>
-                <h2>{artist.name}</h2>
+            <div className="container-banner">
+                <h2>{artist.name}</h2><span>({artist.type === 0 ? "Solo" : "Band"})</span>
             </div>
-            <div className="flex-container p-md">
-                {artist.musicians && (
-                    <div className="p-sm">
+            <div className="container-body">
+                <div className="details-contents">
+                    <div>
                         <h3>Musicians</h3>
-                        {artist.musicians.map((m, i) => (
-                            <p key={i}>{m}</p>
-                        ))}
+                        {artist.musicians && (
+                            <ul>
+                                {artist.musicians.map((m, i) => (
+                                    <li key={i}>{m}</li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
-                )}
-                {artist.albums.length > 0 && (
-                    <div className="p-sm">
+                    <div>
                         <h3>Albums</h3>
-                        {artist.albums.map((a) => (
-                            <p key={a.id}>
-                                {a.name} ({a.year})
-                            </p>
-                        ))}
+                        {artist.albums.length > 0 && (
+                            <ul>
+                                {artist.albums.map((a) => (
+                                    <li className="clickable" key={a.id} onClick={() => navigateOnClick(a.id)} >
+                                        {a.name} ({a.year})
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
-                )}
+                </div>
             </div>
         </div>)
     }

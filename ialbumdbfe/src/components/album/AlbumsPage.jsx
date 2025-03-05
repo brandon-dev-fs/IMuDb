@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getAlbums } from '../../services/httprequest';
 import AlbumGrid from './AlbumGrid';
+import Loading from '../loading/loading';
+import SearchBar from '../searchbar/SearchBar'
 
 export default function AlbumsPage() {
     const [loading, setLoading] = useState(true);
@@ -8,13 +10,13 @@ export default function AlbumsPage() {
     const [albums, setAlbums] = useState([]);
     const [filteredAlbums, setFilteredAlbums] = useState([]);
 
-    const handleSearch = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const newFilter = albums.filter((a) => {
-            return a.name.toLowerCase().includes(searchTerm);
-        });
-        setFilteredAlbums(newFilter);
-    };
+    //const handleSearch = (e) => {
+    //    const searchTerm = e.target.value.toLowerCase();
+    //    const newFilter = albums.filter((a) => {
+    //        return a.name.toLowerCase().includes(searchTerm);
+    //    });
+    //    setFilteredAlbums(newFilter);
+    //};
 
     useEffect(() => {
         getAlbums()
@@ -33,7 +35,7 @@ export default function AlbumsPage() {
     if (loading || error) {
         return (
             <div>
-                {loading && <h2>Loading...</h2>}
+                {loading && <Loading />}
                 {error && <h2>Error</h2>}
             </div>
         );
@@ -42,19 +44,14 @@ export default function AlbumsPage() {
             <div className="container">
                 {filteredAlbums && (
                     <>
-                        <div className="page-banner p-md">
+                        <div className="container-banner">
                             <h2>Albums</h2>
-                            <input
-                                className="search-bar"
-                                type="text"
-                                placeholder="Search Albums"
-                                onChange={handleSearch}
-                            />
+                            <SearchBar placeholder="Search Albums" list={albums} setFilteredList={setFilteredAlbums} />
                             <button className="button add-button">
-                                Add
+                                Add New Album
                             </button>
                         </div>
-                        <div className="p-md">
+                        <div className="container-body">
                             <AlbumGrid albums={filteredAlbums}></AlbumGrid>
                         </div>
                     </>

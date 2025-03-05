@@ -1,77 +1,11 @@
-@import './header.css';
-@import './nav.css';
-@import './button.css';
-@import './footer.css';
-@import './card.css';
-@import './page.css';
-@import './search.css';
-@import './form.css';
-
-:root {
-    --color-primary:#BB7743;
-    --color-secondary: #55868C;
-    --color-black:#2E3138;
-    --color-grey: #898889;
-    --color-white: #E4DFDA;
-}
-
-#root {
-    height: 100%;
-}
-
-html, body {
-    background-color: var(--color-primary);
-    color: var(--color-black);
-    height: 100%;
-    margin:0;
-}
-
-ul {
-    padding: 0;
-}
-
-ul>li {
-    align-items: center;
-    list-style: none;
-}
-
-.app {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.grid {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-.p-sm {
-    padding: 1rem
-}
-
-.p-md {
-    padding: 2rem;
-}
-
-.p-lg {
-    padding: 3rem;
-}
-
-input {
-    margin: 1rem;
-    padding: 2px;
-}
-
-/*
-Basic Style Rules
-
--- Element selector 
-styles the html element defined ie 
-h2 {
-    font: bold
-}
-*/
-
+@import 'Containers/index.css';
+@import 'DetailPage/index.css';
+@import 'Footer/index.css';
+@import 'Forms/index.css';
+@import 'Global/index.css';
+@import 'Grid/index.css';
+@import 'Header/index.css';
+@import 'List/index.css';
+@import 'Loading/index.css';
+@import 'Modal/index.css';
+@import 'Search/index.css';

@@ -1,22 +1,27 @@
 .container {
-    height: 100%;
-    width: 65%;
+    height:100vh;
     background-color: var(--color-white);
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-.page-banner {
+
+.container-banner {
     background-color: var(--color-secondary);
+    color: #fff;
+    padding: 1em 2em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
 }
 
-.page-banner > h2 {
-    color: white;
+.container-body {
+    padding: 1em 4.5em;
 }
 
-.flex-container {
+/*.flex-container {
     display: flex;
     justify-content: space-between;
-}
+}*/

@@ -13,18 +13,15 @@ import './styles/styles.css';
 function App() {
 	return (
 		<Router>
-			<Header></Header>
-			<div className="app">
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/artists" element={<ArtistsPage />} />
-					<Route path="/artists/:id" element={<ArtistDetailsPage />} />
-					<Route path="/albums" element={<AlbumsPage />} />
-					<Route path="/albums/:id" element={<AlbumDetailsPage />} />
-					
-				</Routes>
-			</div>
-			<Footer></Footer>
+			<Header />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/artists" element={<ArtistsPage />} />
+				<Route path="/artists/:id" element={<ArtistDetailsPage />} />
+				<Route path="/albums" element={<AlbumsPage />} />
+				<Route path="/albums/:id" element={<AlbumDetailsPage />} />
+			</Routes>
+			<Footer />
 		</Router>
 	);
 }

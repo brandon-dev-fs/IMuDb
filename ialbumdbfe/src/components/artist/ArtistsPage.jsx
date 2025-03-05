@@ -2,24 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { getArtist } from '../../services/httprequest';
 import ArtistList from './ArtistList';
 import AddUpdateArtistForm from './AddUpdateArtist';
+import Loading from '../loading/loading';
+import SearchBar from '../searchbar/SearchBar'
 
 export default function ArtistsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [artists, setArtists] = useState([]);
-	const [editing, setEditing] = useState(false);
 	const [filteredArtist, setFilteredArtist] = useState([]);
-	const [editArtist, setEditArtist] = useState(null);
-	const [formToggle, setFormToggle] = useState(false)
-
-	// When the search bar is updated to a new search term it updates the term value
-	const handleSearch = (e) => {
-		const searchTerm = e.target.value.toLowerCase();
-		const newFilter = artists.filter((a) => {
-			return a.name.toLowerCase().includes(searchTerm);
-		});
-		setFilteredArtist(newFilter);
-	};
+	//const [editArtist, setEditArtist] = useState(null);
+	const [modalToggle, setModalToggle] = useState(false)
 
 	useEffect(() => {
 		getArtist()
@@ -35,17 +27,12 @@ export default function ArtistsPage() {
 				setError(true);
 			})
 
-	}, [editing]);
-
-	const handleAdd = () => {
-		console.log('add');
-		setEditArtist({})
-	}
+	}, [modalToggle]);
 
 	if (loading || error) {
 		return (
 			<div>
-				{loading && <h2>Loading...</h2>}
+				{loading && <Loading />}
 				{error && <h2>Error</h2>}
 			</div>
 		);
@@ -54,30 +41,21 @@ export default function ArtistsPage() {
 			<div className="container">
 				{filteredArtist && (
 					<>
-						<div className="page-banner p-md">
+						<div className="container-banner">
 							<h2>Artists</h2>
-							<input
-								className="search-bar"
-								type="text"
-								placeholder="Search Artist"
-								onChange={handleSearch}
-							/>
-							<button type="button" onClick={() => setFormToggle(true)} className="button add-button">
+							<SearchBar placeholder="Search Artist" list={artists} setFilteredList={setFilteredArtist} />
+							<button type="button" onClick={() => setModalToggle(true)} className="button add-button">
 								Add New Artist
 							</button>
 						</div>
-						<div className="p-md">
+						<div className="container-body">
 							<ArtistList
 								artists={filteredArtist}
 							/>
 						</div>
 					</>
 				)}
-				{
-					formToggle && (
-						<AddUpdateArtistForm editArtist={editArtist} setFormToggle={setFormToggle} />
-					)
-				}
+				<AddUpdateArtistForm modalToggle={modalToggle} setModalToggle={setModalToggle} />
 			</div>
 		);
 	}

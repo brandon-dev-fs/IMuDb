@@ -1,0 +1,11 @@
+:root {
+    --color-black: #2E3138;
+    --color-grey: #898889;
+    --color-primary: #BB7743;
+    --color-primary-light: #C99369;
+    --color-secondary: #55868C;
+    --color-white: #E4DFDA;
+    --border-radius: 4px;
+    --logo-width-offset: 3.5em;
+    --logo-height-offset: 3.5em;
+}
