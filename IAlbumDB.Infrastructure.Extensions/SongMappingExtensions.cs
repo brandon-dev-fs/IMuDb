@@ -5,7 +5,7 @@ using IAlbumDB.Domain.Entities.Songs;
 
 namespace IAlbumDB.Infrastructure.Extensions
 {
-    public static class SongMappingExtensions
+    public static class SongEntityExtensions
     {
         public static SongDetails ToDetailedDto(this SongEntity song)
         {
@@ -25,7 +25,7 @@ namespace IAlbumDB.Infrastructure.Extensions
                     {
                         Id = song.Artist?.Id,
                         Name = song.Artist.Name,
-                        Members = song.Artist.Musicians ?? new List<string>()
+                        Musicians = song.Artist.Musicians ?? new List<string>()
                     },
                 },
                 UpdatedAt = song.UpdatedAt

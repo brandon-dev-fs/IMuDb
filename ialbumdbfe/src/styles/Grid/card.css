@@ -1,0 +1,23 @@
+.card {
+    background-color: #fff;
+    color: var(--color-black);
+    cursor: pointer;
+    padding: 1em 3em;
+    margin: 1em;
+    border-radius: var(--border-radius);
+    width: 25%;
+    transition: transform 0.25s ease-in-out;
+    box-shadow: 2px 4px 4px 2px rgb(75 75 75 / 75%);
+}
+
+    .card .card-title span {
+        font-style: italic;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card .card-title {
+        font-size: 22px;
+    }

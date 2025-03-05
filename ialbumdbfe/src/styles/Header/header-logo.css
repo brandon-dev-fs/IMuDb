@@ -1,0 +1,18 @@
+.header-logo {
+    height: var(--logo-height-offset);
+    width: var(--logo-width-offset);
+}
+
+.header-logo:hover {
+    animation: 1.25s rotate-logo ease-out;
+}
+
+@keyframes rotate-logo {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

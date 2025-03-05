@@ -1,0 +1,21 @@
+button {
+    background-color: white;
+    border: none;
+    color: var(--color-black);
+    padding: 4px;
+    border-radius: var(--border-radius);
+    margin: 2px;
+    padding: 1em;
+    height: fit-content;
+}
+
+
+    button:hover, button:focus {
+        background-color: var(--color-grey);
+        color: #ffffff;
+    }
+
+.search-bar-button {
+    background-image: url('../assets/icons/search.png');
+    background-repeat: no-repeat;
+}

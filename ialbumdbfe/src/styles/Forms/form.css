@@ -1,0 +1,7 @@
+.form-banner {
+    background: var(--color-grey);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

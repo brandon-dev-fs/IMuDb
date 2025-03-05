@@ -1,7 +1,10 @@
-﻿namespace IAlbumDB.Domain.DTOs.Return.Artists
+﻿using IAlbumDB.Domain.Entities.Artists;
+
+namespace IAlbumDB.Domain.DTOs.Return.Artists
 {
     public class ArtistBase : BaseReturnDto
     {
-        public IList<string>? Members { get; init; }
+        public IList<string>? Musicians { get; init; }
+        public ArtistType Type { get; init; }
     }
 }
